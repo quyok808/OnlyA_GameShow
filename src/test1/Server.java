@@ -16,7 +16,7 @@ public class Server {
     private static final Queue<ClientHandler> waitingQueue = new ConcurrentLinkedQueue<>();
 
     public static void main(String[] args) throws IOException {
-        loadQuestionsFromFile("D:/THmangmaytinh/test2/questions.txt");
+        loadQuestionsFromFile("questions.txt");
         ServerSocket serverSocket = new ServerSocket(12345);
         System.out.println("Server is running...");
 
