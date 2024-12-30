@@ -9,12 +9,16 @@ import java.awt.geom.Ellipse2D;
 import javax.swing.*;
 
 /**
- *
- * @author Le Cuong
+ * 2180603884
+ * NGUYEN CONG QUY
+ */
+
+/** Description
+ *  Class này dùng để custom lại label thành hình tròn
+ * 
  */
 public class RoundLabel extends JLabel {
-
-    // Constructor
+    
     public RoundLabel(String text) {
         super(text);
         setOpaque(false);  // Không sử dụng nền mặc định của JLabel

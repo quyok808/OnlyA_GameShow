@@ -12,7 +12,16 @@ import javax.swing.*;
  * @author Le Cuong
  */
 public class frmChonGoiCauHoi extends javax.swing.JFrame {
-
+    private ListScoreBoard _scoreboard;
+    
+    public frmChonGoiCauHoi(ListScoreBoard scoreboard, int diem) {
+        initComponents();
+        buttonGroup1.add(jRadioButton1);
+        buttonGroup1.add(jRadioButton2);
+        _scoreboard = scoreboard;
+        label_Score.setText(diem+"");
+    }
+    
     /**
      * Creates new form frmChonGoiCauHoi
      */
@@ -21,6 +30,8 @@ public class frmChonGoiCauHoi extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton1);
         buttonGroup1.add(jRadioButton2);
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -71,7 +82,7 @@ public class frmChonGoiCauHoi extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("DejaVu Serif", 1, 18)); // NOI18N
         jButton2.setText("Bắt đầu");
 
-        label_Score.setFont(new java.awt.Font("DejaVu Serif", 0, 36)); // NOI18N
+        label_Score.setFont(new java.awt.Font("DejaVu Serif", 0, 48)); // NOI18N
         label_Score.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label_Score.setText("140");
         label_Score.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));

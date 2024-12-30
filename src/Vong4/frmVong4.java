@@ -94,6 +94,7 @@ public class frmVong4 extends javax.swing.JFrame {
 
         panel_Video.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
+        label_time.setFont(new java.awt.Font("DejaVu Serif", 1, 14)); // NOI18N
         label_time.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label_time.setText("00:30");
         label_time.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -116,13 +117,21 @@ public class frmVong4 extends javax.swing.JFrame {
         );
 
         jTextArea1.setColumns(20);
+        jTextArea1.setFont(new java.awt.Font("DejaVu Serif Condensed", 2, 13)); // NOI18N
         jTextArea1.setRows(5);
         jTextArea1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jTextArea1.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(jTextArea1);
 
+        btn_Submit.setBackground(new java.awt.Color(153, 255, 153));
+        btn_Submit.setFont(new java.awt.Font("DejaVu Serif", 0, 14)); // NOI18N
         btn_Submit.setText("Trả lời");
+        btn_Submit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        btn_Next.setBackground(new java.awt.Color(255, 153, 153));
+        btn_Next.setFont(new java.awt.Font("DejaVu Serif", 0, 14)); // NOI18N
         btn_Next.setText("Bỏ qua");
+        btn_Next.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         jLabel2.setFont(new java.awt.Font("DejaVu Serif", 3, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
