@@ -19,6 +19,7 @@ public class frmRegister extends javax.swing.JFrame {
      */
     public frmRegister() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -105,8 +106,9 @@ public class frmRegister extends javax.swing.JFrame {
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 JOptionPane.showMessageDialog(this, "Đăng ký thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                jTextField1.setText("");
-                jPasswordField1.setText("");
+                frmLogin login = new frmLogin(); // Giả sử bạn đã tạo lớp này
+                login.setVisible(true);
+                this.dispose(); 
             }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập đã tồn tại. Vui lòng thử lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);

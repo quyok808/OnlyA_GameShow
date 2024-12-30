@@ -4,6 +4,10 @@
  */
 package test1;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 /**
  *
  * @author account
@@ -15,6 +19,7 @@ public class frmLogin extends javax.swing.JFrame {
      */
     public frmLogin() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -31,6 +36,7 @@ public class frmLogin extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,6 +51,13 @@ public class frmLogin extends javax.swing.JFrame {
 
         jLabel2.setText("Mật khẩu");
 
+        jButton2.setText("Đăng kí");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -56,13 +69,15 @@ public class frmLogin extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPasswordField1)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                     .addComponent(jTextField1))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(167, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(91, 91, 91)
                 .addComponent(jButton1)
-                .addGap(145, 145, 145))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(64, 64, 64))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -75,31 +90,68 @@ public class frmLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String username = jTextField1.getText();
-        String password = new String(jPasswordField1.getPassword());
+    String username = jTextField1.getText().trim();
+    String password = new String(jPasswordField1.getPassword()).trim();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Tên đăng nhập và mật khẩu không được để trống!");
+    // Kiểm tra username và password không rỗng
+    if (username.isEmpty() || password.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+        return;
+    }
+
+    try {
+        // Kết nối cơ sở dữ liệu
+        Connection conn = DBConnection.getConnection();
+        if (conn == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Không thể kết nối đến cơ sở dữ liệu!");
             return;
         }
 
-        // Placeholder: Validate username and password
-        if (username.equals("admin") && password.equals("1234")) {
+        // Câu lệnh SQL để kiểm tra username và password
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, username);
+        stmt.setString(2, password);  // Không băm, so sánh mật khẩu trực tiếp
+
+        // Thực hiện câu lệnh
+        ResultSet rs = stmt.executeQuery();
+
+        // Kiểm tra kết quả
+        if (rs.next()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-            // Proceed to next screen or logic
+            this.dispose(); // Đóng màn hình đăng nhập
+            new frmtrangchu(username).setVisible(true);
+            //new frmClient(username).setVisible(true); // Mở màn hình client và truyền tên người chơi
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu.");
+            javax.swing.JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!");
         }
+
+        // Đóng kết nối
+        rs.close();
+        stmt.close();
+        conn.close();
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+        e.printStackTrace(); // In ra lỗi chi tiết trong console nếu cần thiết
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        frmRegister obj = new frmRegister();
+        obj.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -138,6 +190,7 @@ public class frmLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField jPasswordField1;

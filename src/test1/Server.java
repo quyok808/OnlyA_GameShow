@@ -43,78 +43,184 @@ public class Server {
             System.out.println("Error reading questions file: " + e.getMessage());
         }
     }
-    synchronized static void pairClients(ClientHandler client) {
-        waitingQueue.add(client);
-        if (waitingQueue.size() >= 2) {
-            ClientHandler player1 = waitingQueue.poll();
-            ClientHandler player2 = waitingQueue.poll();
-            if (player1 != null && player2 != null) {
-                player1.setPartner(player2);
-                player2.setPartner(player1);
-                player1.sendMessage("Paired with: " + player2.getPlayerName());
-                player2.sendMessage("Paired with: " + player1.getPlayerName());
-                startGame(player1, player2);
-            }
+    
+    private static void updateWaitingRoom() {
+        StringBuilder waitingRoomStatus = new StringBuilder("Waiting Room:\n");
+        for (ClientHandler client : waitingQueue) {
+            waitingRoomStatus.append(client.getPlayerName()).append("\n");
+        }
+        broadcastWaitingRoom(waitingRoomStatus.toString());
+    }
+
+    private static void broadcastWaitingRoom(String message) {
+        for (ClientHandler client : waitingQueue) {
+            client.sendMessage(message);
         }
     }
+    synchronized static void pairClients(ClientHandler client) {
+        waitingQueue.add(client);
+        updateWaitingRoom();
 
-    private static void startGame(ClientHandler player1, ClientHandler player2) {
-        new Thread(() -> {
-            try {
-                int round = 1;
-                int maxRounds = 4; // Số vòng chơi cố định
-                int questionsPerRound = 5; // Số câu hỏi mỗi vòng
-                List<String[]> availableQuestions = new ArrayList<>(questions); // Sao chép danh sách câu hỏi
-
-                Collections.shuffle(availableQuestions); // Xáo trộn danh sách câu hỏi
-
-                while (round <= maxRounds && !availableQuestions.isEmpty()) {
-                    player1.sendMessage("=== ROUND " + round + " ===");
-                    player2.sendMessage("=== ROUND " + round + " ===");
-
-                    // Lấy tối đa 5 câu hỏi từ danh sách đã xáo trộn
-                    List<String[]> roundQuestions = availableQuestions.subList(0, Math.min(questionsPerRound, availableQuestions.size()));
-
-                    for (String[] questionData : roundQuestions) {
-                        sendQuestion(player1, questionData);
-                        sendQuestion(player2, questionData);
-
-                        String answer1 = player1.readAnswer();
-                        String answer2 = player2.readAnswer();
-
-                        evaluateAnswer(player1, answer1, questionData[5]);
-                        evaluateAnswer(player2, answer2, questionData[5]);
+        if (waitingQueue.size() >= 4) { // Chờ đủ 4 người chơi
+            new Thread(() -> {
+                try {
+                    // Đếm ngược 10 giây
+                    for (int i = 10; i > 0; i--) {
+                        broadcastWaitingRoom("Game starts in " + i + " seconds...");
+                        Thread.sleep(1000);
                     }
 
-                    // Xóa các câu hỏi đã sử dụng khỏi danh sách
-                    availableQuestions.removeAll(roundQuestions);
-
-                    player1.sendMessage("End of Round " + round + ". Your score: " + player1.getScore());
-                    player2.sendMessage("End of Round " + round + ". Your score: " + player2.getScore());
-
-                    round++;
-
-                    if (round <= maxRounds && !availableQuestions.isEmpty()) {
-                        player1.sendMessage("Prepare for the next round...");
-                        player2.sendMessage("Prepare for the next round...");
-                        Thread.sleep(3000); // Nghỉ giữa các vòng
+                    // Lấy 4 người chơi từ phòng chờ
+                    List<ClientHandler> players = new ArrayList<>();
+                    for (int i = 0; i < 4; i++) {
+                        players.add(waitingQueue.poll());
                     }
+
+                    // Xác nhận tất cả người chơi đã ghép cặp
+                    for (ClientHandler player : players) {
+                        player.sendMessage("Game starting! Players in this game:");
+                        for (ClientHandler teammate : players) {
+                            if (player != teammate) {
+                                player.sendMessage("- " + teammate.getPlayerName());
+                            }
+                        }
+                    }
+
+                    // Bắt đầu trò chơi với 4 người chơi
+                    startGame(players);
+                    updateWaitingRoom(); // Cập nhật phòng chờ sau khi ghép cặp
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-
-                player1.sendMessage("Game over! Final score: " + player1.getScore());
-                player2.sendMessage("Game over! Final score: " + player2.getScore());
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+            }).start();
+        }
+    }
+//    synchronized static void pairClients(ClientHandler client) {
+//        waitingQueue.add(client);
+//        updateWaitingRoom();
+//
+//        if (waitingQueue.size() >= 4) { // Chờ đủ 4 người chơi
+//            new Thread(() -> {
+//                try {
+//                    // Đếm ngược 10 giây
+//                    for (int i = 10; i > 0; i--) {
+//                        broadcastWaitingRoom("Game starts in " + i + " seconds...");
+//                        Thread.sleep(1000);
+//                    }
+//
+//                    // Lấy 4 người chơi từ phòng chờ
+//                    List<ClientHandler> players = new ArrayList<>();
+//                    for (int i = 0; i < 4; i++) {
+//                        players.add(waitingQueue.poll());
+//                    }
+//
+//                    // Xác nhận tất cả người chơi đã ghép cặp
+//                    for (ClientHandler player : players) {
+//                        player.sendMessage("Game starting! Players in this game:");
+//                        for (ClientHandler teammate : players) {
+//                            if (player != teammate) {
+//                                player.sendMessage("- " + teammate.getPlayerName());
+//                            }
+//                        }
+//                    }
+//
+//                    // Bắt đầu trò chơi với 4 người chơi
+//                    startGame(players);
+//                    updateWaitingRoom(); // Cập nhật phòng chờ sau khi ghép cặp
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }).start();
+//        }
+//    }
+    private static void startGame(List<ClientHandler> players) {
+    new Thread(() -> {
+        // Thông báo bắt đầu trò chơi
+        for (ClientHandler player : players) {
+            player.sendMessage("Game is starting now! Players in this game:");
+            for (ClientHandler teammate : players) {
+                if (player != teammate) {
+                    player.sendMessage("- " + teammate.getPlayerName());
+                }
             }
-        }).start();
-    }
-    private static void sendQuestion(ClientHandler client, String[] questionData) throws IOException {
-        client.sendMessage("Question:" + questionData[0]);
-        client.sendMessage(questionData[1]);
-        client.sendMessage(questionData[2]);
-        client.sendMessage(questionData[3]);
-        client.sendMessage(questionData[4]);
-    }
+        }
+        // Trò chơi bắt đầu
+        // Ví dụ ở đây có thể chỉ đơn giản là thông báo rằng trò chơi đã bắt đầu mà không cần câu hỏi
+        for (ClientHandler player : players) {
+            player.sendMessage("Game started! Good luck!");
+        }
+    }).start();
+}
+
+//    private static void startGame(List<ClientHandler> players) {
+//    new Thread(() -> {
+//        try {
+//            int round = 1;
+//            int maxRounds = 4; // Số vòng chơi cố định
+//            int questionsPerRound = 5; // Số câu hỏi mỗi vòng
+//            List<String[]> availableQuestions = new ArrayList<>(questions); // Sao chép danh sách câu hỏi
+//
+//            Collections.shuffle(availableQuestions); // Xáo trộn danh sách câu hỏi
+//
+//            while (round <= maxRounds && !availableQuestions.isEmpty()) {
+//                // Thông báo bắt đầu vòng chơi
+//                for (ClientHandler player : players) {
+//                    player.sendMessage("=== ROUND " + round + " ===");
+//                }
+//
+//                // Lấy tối đa 5 câu hỏi từ danh sách đã xáo trộn
+//                List<String[]> roundQuestions = availableQuestions.subList(0, Math.min(questionsPerRound, availableQuestions.size()));
+//
+//                for (String[] questionData : roundQuestions) {
+//                    for (ClientHandler player : players) {
+//                        sendQuestion(player, questionData);
+//                    }
+//
+//                    // Đọc câu trả lời từ tất cả người chơi
+//                    Map<ClientHandler, String> answers = new HashMap<>();
+//                    for (ClientHandler player : players) {
+//                        answers.put(player, player.readAnswer());
+//                    }
+//
+//                    // Đánh giá câu trả lời
+//                    for (ClientHandler player : players) {
+//                        evaluateAnswer(player, answers.get(player), questionData[5]);
+//                    }
+//                }
+//
+//                // Xóa các câu hỏi đã sử dụng khỏi danh sách
+//                availableQuestions.removeAll(roundQuestions);
+//
+//                for (ClientHandler player : players) {
+//                    player.sendMessage("End of Round " + round + ". Your score: " + player.getScore());
+//                }
+//
+//                round++;
+//
+//                if (round <= maxRounds && !availableQuestions.isEmpty()) {
+//                    for (ClientHandler player : players) {
+//                        player.sendMessage("Prepare for the next round...");
+//                    }
+//                    Thread.sleep(3000); // Nghỉ giữa các vòng
+//                }
+//            }
+//
+//            // Kết thúc trò chơi
+//            for (ClientHandler player : players) {
+//                player.sendMessage("Game over! Final score: " + player.getScore());
+//            }
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }).start();
+//    }
+//    private static void sendQuestion(ClientHandler client, String[] questionData) throws IOException {
+//        client.sendMessage("Question:" + questionData[0]);
+//        client.sendMessage(questionData[1]);
+//        client.sendMessage(questionData[2]);
+//        client.sendMessage(questionData[3]);
+//        client.sendMessage(questionData[4]);
+//    }
 
     private static void evaluateAnswer(ClientHandler client, String answer, String correctAnswer) {
         if (answer != null && answer.equalsIgnoreCase(correctAnswer)) {
@@ -142,7 +248,7 @@ public class Server {
         @Override
         public void run() {
             try {
-                out.println("Enter your name:");
+                //out.println("Enter your name:");
                 this.playerName = in.readLine();
                 out.println("Hello, " + this.playerName + "!");
                 //out.println("Press 'Pair' to find an opponent.");

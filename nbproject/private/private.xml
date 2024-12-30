@@ -4,8 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/THmangmaytinh/test2/src/test1/Server.java</file>
+            <file>file:/D:/THmangmaytinh/test2/src/test1/frmClient.java</file>
             <file>file:/D:/THmangmaytinh/test2/src/test1/frmRegister.java</file>
             <file>file:/D:/THmangmaytinh/test2/src/test1/frmLogin.java</file>
+            <file>file:/D:/THmangmaytinh/test2/src/test1/HashUtils.java</file>
+            <file>file:/D:/THmangmaytinh/test2/src/test1/frmphongcho.java</file>
             <file>file:/D:/THmangmaytinh/test2/src/test1/frmtrangchu.java</file>
         </group>
     </open-files>

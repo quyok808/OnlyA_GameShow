@@ -4,17 +4,35 @@
  */
 package test1;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author account
  */
 public class frmtrangchu extends javax.swing.JFrame {
-
+private String playerName;
     /**
      * Creates new form frmtrangchu
      */
-    public frmtrangchu() {
+    public frmtrangchu(String playerName) {
+        this.playerName = playerName;
         initComponents();
+        lbtennguoichoi.setText("Xin chào "+playerName);
+        setLocationRelativeTo(null);
+        updateLoginButtonVisibility();
+    }
+    
+    public frmtrangchu() {
+        this("Khách");
+    }
+    
+    private void updateLoginButtonVisibility() {
+        if (playerName != null && !playerName.equals("Khách")) {
+            jButton1.setVisible(false); // Ẩn nút Đăng nhập nếu đã đăng nhập
+        } else {
+            jButton1.setVisible(true); // Hiển thị nút Đăng nhập nếu là khách
+        }
     }
 
     /**
@@ -29,10 +47,18 @@ public class frmtrangchu extends javax.swing.JFrame {
         btnstartgame = new javax.swing.JButton();
         bangxephang = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        lbtennguoichoi = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(800, 600));
 
-        btnstartgame.setText("Startgame");
+        btnstartgame.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnstartgame.setText("Start game");
         btnstartgame.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnstartgameActionPerformed(evt);
@@ -40,8 +66,10 @@ public class frmtrangchu extends javax.swing.JFrame {
         });
 
         bangxephang.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        bangxephang.setMaximumSize(new java.awt.Dimension(500, 450));
+        bangxephang.setPreferredSize(new java.awt.Dimension(500, 490));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("BẢNG XẾP HẠNG");
 
         javax.swing.GroupLayout bangxephangLayout = new javax.swing.GroupLayout(bangxephang);
@@ -49,45 +77,111 @@ public class frmtrangchu extends javax.swing.JFrame {
         bangxephangLayout.setHorizontalGroup(
             bangxephangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bangxephangLayout.createSequentialGroup()
-                .addContainerGap(64, Short.MAX_VALUE)
+                .addContainerGap(184, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(45, 45, 45))
+                .addGap(165, 165, 165))
         );
         bangxephangLayout.setVerticalGroup(
             bangxephangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bangxephangLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(457, Short.MAX_VALUE))
         );
+
+        lbtennguoichoi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbtennguoichoi.setText("Tennguoidangnhap");
+
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setText("Đăng nhập");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setText("Đăng xuất");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setText("Lịch sử đấu");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnstartgame, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bangxephang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbtennguoichoi, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnstartgame, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(bangxephang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(btnstartgame)
-                .addContainerGap(218, Short.MAX_VALUE))
-            .addComponent(bangxephang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbtennguoichoi)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bangxephang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnstartgame, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnstartgameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnstartgameActionPerformed
-        frmClient obj = new frmClient();
+        if (playerName == null || playerName.equals("Khách")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng đăng nhập trước khi bắt đầu trò chơi!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        //frmClient obj = new frmClient(playerName);
+        frmphongcho obj = new frmphongcho(playerName);
         obj.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnstartgameActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        frmLogin obj = new frmLogin();
+        obj.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                this.playerName = "Khách";
+                // Mở lại form đăng nhập
+                lbtennguoichoi.setText("Xin chào " + playerName);
+                updateLoginButtonVisibility();
+            }
+    }//GEN-LAST:event_jButton2ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -114,18 +208,22 @@ public class frmtrangchu extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(frmtrangchu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new frmtrangchu().setVisible(true);
-            }
+            }     
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bangxephang;
     private javax.swing.JButton btnstartgame;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbtennguoichoi;
     // End of variables declaration//GEN-END:variables
 }
