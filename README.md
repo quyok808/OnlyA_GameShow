@@ -4,8 +4,9 @@
 ![image](https://github.com/user-attachments/assets/78019e63-b1ae-4d5f-9232-638663af0a99)
 
 Chức năng đã hoàn thành:
-Đã nhận được bộ câu hỏi và đáp án từ server.
-Đã tính được điểm với mỗi câu hỏi.
-Chức năng chưa hoàn thành:
+- Đã nhận được bộ câu hỏi và đáp án từ server.
+- Đã tính được điểm với mỗi câu hỏi.
 - Chức năng 4 người chơi cùng lúc chưa hoàn thiện.
+- Thời gian đọc và trả lời câu hỏi trong 10s
+Chức năng chưa hoàn thành:
 - Chưa update logic người chơi chọn đáp án nhanh nhất.
